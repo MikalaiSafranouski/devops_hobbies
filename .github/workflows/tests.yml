@@ -23,33 +23,33 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Install kubectl
-        uses: azure/setup-kubectl@v1
-        with:
-          version: 'v1.21.3'
-        id: install
-
-      - name: Set up Kustomize
-        uses: imranismail/setup-kustomize@v2
-
-      - name: Kustomize update image's tag
-        run: |
-          cd deploy
-          kustomize edit set image public.ecr.aws/g3n2k4q3/devops_hobbies:${GITHUB_SHA}
-          kustomize edit set label commit:${GITHUB_SHA}
-
-          git config user.name github-actions
-          git config user.email github-actions@github.com
-
-          echo "GIT STATUS........."
-          git status
-          git branch
-          git log
-
-          git add .
-          git commit --amend --no-edit
-          git push
-        
+#      - name: Install kubectl
+#        uses: azure/setup-kubectl@v1
+#        with:
+#          version: 'v1.21.3'
+#        id: install
+#
+#      - name: Set up Kustomize
+#        uses: imranismail/setup-kustomize@v2
+#
+#      - name: Kustomize update image's tag
+#        run: |
+#          cd deploy
+#          kustomize edit set image public.ecr.aws/g3n2k4q3/devops_hobbies:${GITHUB_SHA}
+#          kustomize edit set label commit:${GITHUB_SHA}
+#
+#          git config user.name github-actions
+#          git config user.email github-actions@github.com
+#
+#          echo "GIT STATUS........."
+#          git status
+#          git branch
+#          git log
+#
+#          git add .
+#          git commit --amend --no-edit
+#          git push
+#
         
         
         

@@ -12,7 +12,7 @@ spec:
     metadata:
       labels:
         app: devops-app
-        commit: latest
+        commit: 1234
     spec:
       containers:
         - name: app
