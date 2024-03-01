@@ -74,6 +74,6 @@ jobs:
       with:
         default_author: github_actions
         add: 'deploy/kustomization.yaml'
-        
+        commit: '--amend --no-edit'
         
 
