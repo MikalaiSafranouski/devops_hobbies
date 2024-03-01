@@ -1,0 +1,20 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: app-from-directory
+spec:
+  destination:
+    namespace: default
+    server: https://kubernetes.default.svc
+  project: default
+  source:
+    directory:
+      recurse: true
+      exclude: 'nested/serviceaccount.yml'
+#      include: '{serviceaccount.yml,service.yml}'
+
+    path: argocd/nginx_application/directory
+    repoURL: https://github.com/MikalaiSafranouski/devops_hobbies.git
+    targetRevision: main
+
+  

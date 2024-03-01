@@ -1,0 +1,87 @@
+name: Build image and push to AWS ECR
+
+permissions:
+ id-token: write
+ contents: write     # allow GA commit changes
+
+
+on:
+  push:
+    branches: [main]
+
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+
+jobs:
+
+  build-and-push:
+    name: Build image
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Check out repo
+      uses: actions/checkout@v3
+
+    - name: Install kubectl
+      uses: azure/setup-kubectl@v1
+      with:
+        version: 'v1.21.3'
+      id: install
+
+    - name: Configure AWS credentials
+      uses: aws-actions/configure-aws-credentials@v4
+      with:
+        role-to-assume: arn:aws:iam::762061610977:role/github-act
+        role-session-name: samplerolesession
+        aws-region: us-east-1
+
+    - name: Login to Amazon ECR Public
+      id: login-ecr-public
+      uses: aws-actions/amazon-ecr-login@v2
+      with:
+        registry-type: public
+
+    - name: Build, tag, and push docker image to Amazon ECR Public
+      env:
+        ECR_REGISTRY: ${{ steps.login-ecr-public.outputs.registry }}
+        REGISTRY_ALIAS: g3n2k4q3
+        ECR_REPOSITORY: devops_hobbies
+        IMAGE_TAG: ${{ github.sha }}
+      run: |
+        docker build -t $ECR_REGISTRY/$REGISTRY_ALIAS/$ECR_REPOSITORY:$IMAGE_TAG -t $ECR_REGISTRY/$REGISTRY_ALIAS/$ECR_REPOSITORY:latest .
+        docker push -a $ECR_REGISTRY/$REGISTRY_ALIAS/$ECR_REPOSITORY
+
+
+    - name: Set up Kustomize
+      uses: imranismail/setup-kustomize@v2
+
+    - name: Kustomize update image's tag
+      env: 
+       CI_COMMIT_MESSAGE: Continuous Integration Build Artifacts
+       CI_COMMIT_AUTHOR: ${{ github.event.repository.name }} Continuous Integration
+    
+      run: |
+        echo "Kustomize updates image tag to" ${GITHUB_SHA}
+        cd deploy
+        kustomize edit set image public.ecr.aws/g3n2k4q3/devops_hobbies:${GITHUB_SHA}
+        kustomize edit set label commit:${GITHUB_SHA}
+
+        echo "GIT CONFIG ............................................."
+
+        git config --global user.name "${{ env.CI_COMMIT_AUTHOR }}"
+        git config --global user.email "username@users.noreply.github.com"
+
+        echo "GIT PULL ............................................."
+        git pull
+        git status
+        
+        echo "GIT ADD ............................................."
+        git add kustomization.yaml
+        
+        echo "GIT COMMIT ............................................."
+        git commit --amend --no-edit
+        git push --force
+
+

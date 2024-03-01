@@ -1,0 +1,20 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+configurations:
+- https://argoproj.github.io/argo-rollouts/features/kustomize/rollout-transform.yaml
+
+namespace: staging
+
+resources:
+- namespace.yaml
+- service-active.yaml
+- service-preview.yaml
+- rollout.yaml
+
+images:
+- name: public.ecr.aws/g3n2k4q3/devops_hobbies
+  newTag: f665eb00cd0d549647a1d42d3ce0ffc13f06ceb8
+
+commonLabels:
+  commit: f665eb00cd0d549647a1d42d3ce0ffc13f06ceb8

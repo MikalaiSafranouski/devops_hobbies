@@ -1,0 +1,17 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: fastapi-app
+spec:
+  project: default
+  destination:
+    namespace: staging
+    server: https://kubernetes.default.svc
+  source:
+    path: deploy
+    repoURL: https://github.com/MikalaiSafranouski/devops_hobbies.git
+    targetRevision: main
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
