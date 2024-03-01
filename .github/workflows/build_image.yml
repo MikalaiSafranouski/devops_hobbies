@@ -67,12 +67,13 @@ jobs:
         cd deploy
         kustomize edit set image public.ecr.aws/g3n2k4q3/devops_hobbies:${GITHUB_SHA}
         kustomize edit set label commit:${GITHUB_SHA}
-
+        
 
     - name: Commit changes
       uses: EndBug/add-and-commit@v9
       with:
         default_author: github_actions
+        pull: '--rebase --autostash ...'
         add: 'deploy/kustomization.yaml'
         commit: '--amend --no-edit'
         
