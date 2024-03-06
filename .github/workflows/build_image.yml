@@ -19,45 +19,17 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Check out repo
+    - name: Check out repo, retrieve all history
       uses: actions/checkout@v4
       with:
        fetch-depth: 0
-       
-    - name: checkout repo fetched
-      run: |
-        git branch
-        git log
-        
-      
+
+
     - name: Install kubectl
       uses: azure/setup-kubectl@v1
       with:
         version: 'v1.21.3'
       id: install
-
-    # - name: Configure AWS credentials
-    #   uses: aws-actions/configure-aws-credentials@v4
-    #   with:
-    #     role-to-assume: arn:aws:iam::762061610977:role/github-act
-    #     role-session-name: samplerolesession
-    #     aws-region: us-east-1
-
-    # - name: Login to Amazon ECR Public
-    #   id: login-ecr-public
-    #   uses: aws-actions/amazon-ecr-login@v2
-    #   with:
-    #     registry-type: public
-
-    # - name: Build, tag, and push docker image to Amazon ECR Public
-    #   env:
-    #     ECR_REGISTRY: ${{ steps.login-ecr-public.outputs.registry }}
-    #     REGISTRY_ALIAS: g3n2k4q3
-    #     ECR_REPOSITORY: devops_hobbies
-    #     IMAGE_TAG: ${{ github.sha }}
-    #   run: |
-    #     docker build -t $ECR_REGISTRY/$REGISTRY_ALIAS/$ECR_REPOSITORY:$IMAGE_TAG -t $ECR_REGISTRY/$REGISTRY_ALIAS/$ECR_REPOSITORY:latest .
-    #     docker push -a $ECR_REGISTRY/$REGISTRY_ALIAS/$ECR_REPOSITORY
 
 
     - name: Set up Kustomize
@@ -70,27 +42,36 @@ jobs:
         kustomize edit set image public.ecr.aws/g3n2k4q3/devops_hobbies:${GITHUB_SHA}
         kustomize edit set label commit:${GITHUB_SHA}
 
+
+    - name: Configure AWS credentials
+      uses: aws-actions/configure-aws-credentials@v4
+      with:
+         role-to-assume: arn:aws:iam::762061610977:role/github-act
+         role-session-name: samplerolesession
+         aws-region: us-east-1
+
+    - name: Login to Amazon ECR Public
+      id: login-ecr-public
+      uses: aws-actions/amazon-ecr-login@v2
+      with:
+         registry-type: public
+
+    - name: Build, tag, and push docker image to Amazon ECR Public
+      env:
+         ECR_REGISTRY: ${{ steps.login-ecr-public.outputs.registry }}
+         REGISTRY_ALIAS: g3n2k4q3
+         ECR_REPOSITORY: devops_hobbies
+         IMAGE_TAG: ${{ github.sha }}
+      run: |
+         docker build -t $ECR_REGISTRY/$REGISTRY_ALIAS/$ECR_REPOSITORY:$IMAGE_TAG -t $ECR_REGISTRY/$REGISTRY_ALIAS/$ECR_REPOSITORY:latest .
+         docker push -a $ECR_REGISTRY/$REGISTRY_ALIAS/$ECR_REPOSITORY    
+
+
+    - name: Commit changes made by Github Actions
+      run: |
         git config user.name github-actions
         git config user.email github-actions@github.com
 
-        echo "GIT STATUS........."
-        git log
-        cat kustomization.yaml
-        
         git add .
         git commit --amend --no-edit
         git push -f
-
-
-        
-
-    # - name: Commit changes
-    #   uses: EndBug/add-and-commit@v9
-    #   with:
-    #     default_author: github_actions
-    #     fetch: true
-    #     pull: '--rebase --autostash ...'
-    #     add: 'deploy/kustomization.yaml'
-    #     commit: '--amend --no-edit'
-        
-
