@@ -25,12 +25,12 @@ jobs:
        fetch-depth: 0
 
     - name: checkout repo fetched
-      env:
-        COMMIT_AUTHOR: $(git log -1 --pretty=%an) and github-actions
-        COMMIT_HASH: $(git log -1 --pretty=%h)
       run: |
         git branch
-        git log
+
+        COMMIT_AUTHOR=$(git log -1 --pretty=%an)
+        COMMIT_HASH=$(git log -1 --pretty=%h)
+        
         echo "Commit author: $COMMIT_AUTHOR"
         echo "Commit hash: $COMMIT_HASH"
         
