@@ -27,7 +27,6 @@ jobs:
     - name: checkout repo fetched
       run: |
         git branch
-
         COMMIT_AUTHOR=$(git log -1 --pretty=%an)
         COMMIT_HASH=$(git log -1 --pretty=%h)
         
@@ -35,57 +34,56 @@ jobs:
         echo "Commit hash: $COMMIT_HASH"
         
 
-    # - name: Install kubectl
-    #   uses: azure/setup-kubectl@v1
-    #   with:
-    #     version: 'v1.21.3'
-    #   id: install
+    - name: Install kubectl
+      uses: azure/setup-kubectl@v1
+      with:
+        version: 'v1.21.3'
+      id: install
 
-    # - name: Configure AWS credentials
-    #   uses: aws-actions/configure-aws-credentials@v4
-    #   with:
-    #      role-to-assume: arn:aws:iam::762061610977:role/github-act
-    #      role-session-name: samplerolesession
-    #      aws-region: us-east-1
+    - name: Configure AWS credentials
+      uses: aws-actions/configure-aws-credentials@v4
+      with:
+         role-to-assume: arn:aws:iam::762061610977:role/github-act
+         role-session-name: samplerolesession
+         aws-region: us-east-1
 
-    # - name: Login to Amazon ECR Public
-    #   id: login-ecr-public
-    #   uses: aws-actions/amazon-ecr-login@v2
-    #   with:
-    #      registry-type: public
+    - name: Login to Amazon ECR Public
+      id: login-ecr-public
+      uses: aws-actions/amazon-ecr-login@v2
+      with:
+         registry-type: public
 
-    # - name: Build, tag, and push docker image to Amazon ECR Public
-    #   env:
-    #      ECR_REGISTRY: ${{ steps.login-ecr-public.outputs.registry }}
-    #      REGISTRY_ALIAS: g3n2k4q3
-    #      ECR_REPOSITORY: devops_hobbies
-    #      IMAGE_TAG: ${{ github.sha }}
-    #   run: |
-    #      docker build -t $ECR_REGISTRY/$REGISTRY_ALIAS/$ECR_REPOSITORY:$IMAGE_TAG -t $ECR_REGISTRY/$REGISTRY_ALIAS/$ECR_REPOSITORY:latest .
-    #      docker push -a $ECR_REGISTRY/$REGISTRY_ALIAS/$ECR_REPOSITORY
+    - name: Build, tag, and push docker image to Amazon ECR Public
+      env:
+         ECR_REGISTRY: ${{ steps.login-ecr-public.outputs.registry }}
+         REGISTRY_ALIAS: g3n2k4q3
+         ECR_REPOSITORY: devops_hobbies
+      run: |
+         COMMIT_HASH=$(git log -1 --pretty=%h)
+         
+         docker build -t $ECR_REGISTRY/$REGISTRY_ALIAS/$ECR_REPOSITORY:$COMMIT_HASH -t $ECR_REGISTRY/$REGISTRY_ALIAS/$ECR_REPOSITORY:latest .
+         docker push -a $ECR_REGISTRY/$REGISTRY_ALIAS/$ECR_REPOSITORY
 
 
-    # - name: Set up Kustomize
-    #   uses: imranismail/setup-kustomize@v2
+    - name: Set up Kustomize
+      uses: imranismail/setup-kustomize@v2
 
-    # - name: Kustomize update image's tag
-    #   env:
-    #     COMMIT_AUTHOR: $(git log -1 --pretty=%an) and github-actions
-    #     COMMIT_HASH: $(git log -1 --pretty=%h)
-    #   run: |
-    #     echo "Kustomize updates image tag to" $COMMIT_HASH
-    #     cd deploy
-    #     kustomize edit set image public.ecr.aws/g3n2k4q3/devops_hobbies:$COMMIT_HASH
-    #     kustomize edit set label commit:$COMMIT_HASH
+    - name: Kustomize update image's tag
+      run: |
+        COMMIT_HASH=$(git log -1 --pretty=%h)
+        
+        echo "Kustomize updates image tag to" $COMMIT_HASH
+        cd deploy
+        kustomize edit set image public.ecr.aws/g3n2k4q3/devops_hobbies:$COMMIT_HASH
+        kustomize edit set label commit:$COMMIT_HASH
     
 
-    # - name: Configure git, commit and push changes made by GithubActions
-    #   env:
-    #     COMMIT_AUTHOR: $(git log -1 --pretty=%an)
-    #   run: |
-    #     git config user.name $COMMIT_AUTHOR
-    #     git config user.email <>
+    - name: Configure git, commit and push changes made by GithubActions
+      run: |
+        COMMIT_AUTHOR=$(git log -1 --pretty=%an)
+        git config user.name $COMMIT_AUTHOR
+        git config user.email <>
 
-    #     git add .
-    #     git commit --amend --no-edit
-    #     git push -f
+        git add .
+        git commit --amend --no-edit
+        git push -f
