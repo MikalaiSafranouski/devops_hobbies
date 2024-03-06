@@ -14,7 +14,7 @@ resources:
 
 images:
 - name: public.ecr.aws/g3n2k4q3/devops_hobbies
-  newTag: 42d3ec3c5dba530ab6262ae9b26d05a713e5a6e1
+  newTag: 5944c234971ef3c247df04b496adae41d4542e2e
 
 commonLabels:
-  commit: 42d3ec3c5dba530ab6262ae9b26d05a713e5a6e1
+  commit: 5944c234971ef3c247df04b496adae41d4542e2e
