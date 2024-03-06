@@ -80,7 +80,7 @@ jobs:
 
     - name: Configure git, commit and push changes made by GithubActions
       run: |
-        COMMIT_AUTHOR=$(git log -1 --pretty=%an)
+        COMMIT_AUTHOR=$(git log -n 1 --pretty=format:"%an")
         git config user.name $COMMIT_AUTHOR
         git config user.email <>
 
