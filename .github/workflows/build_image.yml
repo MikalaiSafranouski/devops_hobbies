@@ -64,16 +64,21 @@ jobs:
       uses: imranismail/setup-kustomize@v2
 
     - name: Kustomize update image's tag
+      env:
+        COMMIT_AUTHOR: $(git log -1 --pretty=%an) and github-actions
+        COMMIT_HASH: $(git log -1 --pretty=%h)
       run: |
-        echo "Kustomize updates image tag to" ${GITHUB_SHA}
+        echo "Kustomize updates image tag to" $COMMIT_HASH
         cd deploy
-        kustomize edit set image public.ecr.aws/g3n2k4q3/devops_hobbies:${GITHUB_SHA}
-        kustomize edit set label commit:${GITHUB_SHA}
+        kustomize edit set image public.ecr.aws/g3n2k4q3/devops_hobbies:$COMMIT_HASH
+        kustomize edit set label commit:$COMMIT_HASH
     
 
     - name: Configure git, commit and push changes made by GithubActions
+      env:
+        COMMIT_AUTHOR: $(git log -1 --pretty=%an)
       run: |
-        git config user.name github-actions
+        git config user.name $COMMIT_AUTHOR
         git config user.email <>
 
         git add .
