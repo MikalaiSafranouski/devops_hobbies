@@ -81,8 +81,9 @@ jobs:
     - name: Configure git, commit and push changes made by GithubActions
       run: |
         COMMIT_AUTHOR=$(git log -n 1 --pretty=format:"%an")
+        COMMIT_AUTHOR_EMAIL=$(git log -n 1 --pretty=format:"%ae")
         git config user.name $COMMIT_AUTHOR
-        git config user.email <>
+        git config user.email $COMMIT_AUTHOR_EMAIL
 
         git add .
         git commit --amend --no-edit
