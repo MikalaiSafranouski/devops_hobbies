@@ -3,8 +3,8 @@ kind: Rollout
 metadata:
   name: devops-web
 spec:
-  replicas: 3
-  revisionHistoryLimit: 3
+  replicas: 2
+  revisionHistoryLimit: 2
   selector:
     matchLabels:
       app: devops-app
@@ -28,5 +28,5 @@ spec:
     blueGreen:
       activeService: devops-svc-active
       previewService: devops-svc-preview
-      autoPromotionEnabled: false
+      autoPromotionEnabled: true
       scaleDownDelaySeconds: 60
