@@ -92,7 +92,7 @@ jobs:
 
         git log -n 3
         git status
-        git add kustomization.yaml
+        git add deploy/kustomization.yaml
 
         git commit --amend --no-edit
         echo "LOGS AGAIN"
