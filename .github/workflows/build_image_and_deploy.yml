@@ -85,6 +85,11 @@ jobs:
         git config user.name $COMMIT_AUTHOR
         git config user.email $COMMIT_AUTHOR_EMAIL
 
+        echo "PULLING REPO"
+        git pull
+
+        echo "GET LOGS"
+        got log
         git add .
         git commit --amend --no-edit
         git push -f
