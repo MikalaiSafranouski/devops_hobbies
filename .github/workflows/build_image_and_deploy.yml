@@ -82,11 +82,10 @@ jobs:
       run: |
         COMMIT_AUTHOR=$(git log -n 1 --pretty=format:"%an")
         COMMIT_AUTHOR_EMAIL=$(git log -n 1 --pretty=format:"%ae")
+        COMMIT_HASH=$(git log -1 --pretty=%h)
+        
         git config user.name $COMMIT_AUTHOR
         git config user.email $COMMIT_AUTHOR_EMAIL
-
-        echo "PULLING REPO"
-        git pull
 
         echo "GET LOGS"
 
@@ -94,8 +93,8 @@ jobs:
         git status
         git add deploy/kustomization.yaml
 
-        git commit --amend --no-edit
-        echo "LOGS AGAIN"
+        git commit --am "Update image tag to "
         
+        echo "LOGS AGAIN"
         git log -n 3
-        git push -f
+        git push
