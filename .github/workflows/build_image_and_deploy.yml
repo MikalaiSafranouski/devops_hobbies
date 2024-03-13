@@ -89,7 +89,13 @@ jobs:
         git pull
 
         echo "GET LOGS"
-        git log
-        git add .
+
+        git log -n 3
+        git status
+        git add kustomization.yaml
+
         git commit --amend --no-edit
+        echo "LOGS AGAIN"
+        
+        git log -n 3
         git push -f
