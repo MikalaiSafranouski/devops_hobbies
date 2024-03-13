@@ -71,30 +71,16 @@ jobs:
     - name: Kustomize update image's tag
       run: |
         COMMIT_HASH=$(git log -1 --pretty=%h)
+        COMMIT_AUTHOR=$(git log -n 1 --pretty=format:"%an")
         
         echo "Kustomize updates image tag to" $COMMIT_HASH
         cd deploy
         kustomize edit set image public.ecr.aws/g3n2k4q3/devops_hobbies:$COMMIT_HASH
         kustomize edit set label commit:$COMMIT_HASH
-    
 
-    - name: Configure git, commit and push changes made by GithubActions
-      run: |
-        COMMIT_AUTHOR=$(git log -n 1 --pretty=format:"%an")
-        COMMIT_AUTHOR_EMAIL=$(git log -n 1 --pretty=format:"%ae")
-        COMMIT_HASH=$(git log -1 --pretty=%h)
-        
-        git config user.name $COMMIT_AUTHOR
-        git config user.email $COMMIT_AUTHOR_EMAIL
+        git config --local user.name 'github-actions[bot]'
+        git config --local user.email 'github-actions[bot]@users.noreply.github.com'
 
-        echo "GET LOGS"
-
-        git log -n 3
-        git status
         git add deploy/kustomization.yaml
-
-        git commit -am "Update image tag to $COMMIT_HASH"
-        
-        echo "LOGS AGAIN"
-        git log -n 3
+        git commit -am "Update image tag to $COMMIT_HASH merged by $COMMIT_AUTHOR"
         git push
