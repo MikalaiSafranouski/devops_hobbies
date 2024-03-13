@@ -93,7 +93,7 @@ jobs:
         git status
         git add deploy/kustomization.yaml
 
-        git commit --am "Update image tag to "
+        git commit -am "Update image tag to $COMMIT_HASH"
         
         echo "LOGS AGAIN"
         git log -n 3
