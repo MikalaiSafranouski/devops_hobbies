@@ -89,7 +89,7 @@ jobs:
         git pull
 
         echo "GET LOGS"
-        got log
+        git log
         git add .
         git commit --amend --no-edit
         git push -f
