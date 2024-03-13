@@ -28,5 +28,5 @@ spec:
     blueGreen:
       activeService: devops-svc-active
       previewService: devops-svc-preview
-      autoPromotionEnabled: true
+      autoPromotionEnabled: false
       scaleDownDelaySeconds: 60
