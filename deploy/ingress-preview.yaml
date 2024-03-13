@@ -1,0 +1,22 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: mikalaika-ingress-preview
+  namespace: staging
+  annotations:
+    alb.ingress.kubernetes.io/ssl-passthrough: "true"
+    nginx.ingress.kubernetes.io/force-ssl-redirect: "false"
+    alb.ingress.kubernetes.io/group.name: ingress-group
+spec:
+  ingressClassName: nginx
+  rules:
+  - host: preview.mikalaika.fun
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: devops-svc-preview
+            port:
+              name: http
