@@ -30,3 +30,4 @@ spec:
       previewService: devops-svc-preview
       autoPromotionEnabled: false
       scaleDownDelaySeconds: 60
+#      autoPromotionSeconds: 60

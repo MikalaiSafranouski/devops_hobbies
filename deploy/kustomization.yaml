@@ -9,6 +9,7 @@ namespace: staging
 resources:
 - namespace.yaml
 - ingress.yaml
+- ingress-preview.yaml
 - service-active.yaml
 - service-preview.yaml
 - rollout.yaml
