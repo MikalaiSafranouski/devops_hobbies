@@ -1,8 +1,8 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: mikalaika-ingress
-  namespace: staging
+  name: argocd-ingress
+  namespace: argocd
   annotations:
     alb.ingress.kubernetes.io/ssl-passthrough: "true"
     nginx.ingress.kubernetes.io/force-ssl-redirect: "false"
@@ -10,13 +10,13 @@ metadata:
 spec:
   ingressClassName: nginx
   rules:
-  - host: mikalaika.fun
+  - host: argocd.mikalaika.fun
     http:
       paths:
       - path: /
         pathType: Prefix
         backend:
           service:
-            name: devops-svc-active
+            name: argocd-server
             port:
-              name: http
+              name: https
