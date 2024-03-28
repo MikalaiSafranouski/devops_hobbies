@@ -14,7 +14,7 @@ Get installation file, specify the version of argocd...I use v.2.10.4(latest)
 ```
 wget https://raw.githubusercontent.com/argoproj/argo-cd/v2.10.4/manifests/ha/install.yaml
 ```
-Apply downloaded `install.yaml` file in namespace `argocd`
+Apply downloaded `install.yaml`(argocd/ha_install directory) file in namespace `argocd`
 ```angular2html
 kubectl apply -f install.yaml -n argocd
 ```
@@ -41,7 +41,8 @@ Resources:
 Ingress controller installation as NETWORK LOAD BALANCER (NLB):
 ```
 kubectl create namespace ingress-nginx
-wget 
+```
+
 ## Ingress and ingress controller installation
 Resources: 
  - https://kubernetes.github.io/ingress-nginx/deploy/
@@ -50,7 +51,7 @@ Resources:
 
 Ingress controller installation -> NETWORK LOAD BALANCER (NLB):
 
-
+```
 kubectl create namespace ingress-nginx
 wget https://raw.githubusercontent.com/kubernetes/ingress-nginx/controller-v1.10.0/deploy/static/provider/aws/nlb-with-tls-termination/deploy.yaml
 ```
@@ -110,7 +111,7 @@ kubectl apply -n argo-rollouts -f https://github.com/argoproj/argo-rollouts/rele
 
 ### Run Argo application
 ```angular2html
-kubectl apply -f argocd-app.yaml -n argocd
+kubectl apply -f deploy/argocd-app.yaml -n argocd
 ```
 
 
