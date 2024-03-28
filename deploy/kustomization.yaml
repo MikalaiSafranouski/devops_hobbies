@@ -16,7 +16,7 @@ resources:
 
 images:
 - name: public.ecr.aws/g3n2k4q3/devops_hobbies
-  newTag: 491b400
+  newTag: 6e8aeb0
 
 commonLabels:
-  commit: 491b400
+  commit: 6e8aeb0
